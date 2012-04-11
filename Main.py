@@ -1,16 +1,16 @@
 #!/usr/bin/env python2
-import time, json, os.path, logging, argparse
+import time, json, os.path, logging, optparse
 import Mail, Bibles
 
 logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
 format="[%(asctime)s %(module)s] %(message)s")
 
-parser = argparse.ArgumentParser(description="""BibleBot -- watches an email
+parser = optparse.OptionParser(description="""BibleBot -- watches an email
     address for incoming scripture references, looks them up, and replies 
     back.""")
-parser.add_argument("-c", "--config", metavar="configpath", dest="configpath", 
+parser.add_option("-c", "--config", metavar="configpath", dest="configpath", 
     help="""Configuration file location""")
-args = parser.parse_args()
+(opts, args) = parser.parse_args()
 
 class BibleBot():
     def __init__(self, configpath=os.path.join(os.path.dirname(__file__),
@@ -42,7 +42,7 @@ class BibleBot():
     def create_default_config(self, configpath):
         logging.info("""No configuration found at specified or default
                     location, creating new config there.""")
-        self.configuration = json.loads("""
+        default_config = """
         {
             "imap_hostname" : "imap.example.com",
             "imap_port"     : 993,
@@ -53,9 +53,10 @@ class BibleBot():
             "smtp_password" : "password",
             "smtp_hostname" : "smtp.example.com",
             "smtp_port"     : 587,
-            "smtp_use_ssl"  : True,
-            "check_interval": 15,
-        }""")
+            "smtp_use_ssl"  : true,
+            "check_interval": 15
+        }"""
+        self.configuration = json.loads(default_config)
 
         logging.info("Config file saved to %s" % configpath)
         with open(configpath, "w") as configfile:
@@ -100,8 +101,8 @@ class BibleBot():
             time.sleep(self.configuration['check_interval'])
             self.inbox.refresh() # refresh inbox
 
-if args.configpath: 
-    biblebot = BibleBot(args.configpath)
+if opts.configpath: 
+    biblebot = BibleBot(opts.configpath)
 else:
     biblebot = BibleBot()
 biblebot.run()
