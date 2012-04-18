@@ -5,9 +5,6 @@ import logging, email
 logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
 format="[%(asctime)s %(module)s] %(message)s")
 
-IMAP_SERVER = 'imap.gmail.com'
-IMAP_PORT = 993
-
 class Inbox:
     """username, password, imap_server='imap.gmail.com', imap_port=993
     creates a new Inbox object, a wrapper for a IMAP account"""
