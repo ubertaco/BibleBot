@@ -1,0 +1,49 @@
+Delivered-To: bible@ninjatricks.net
+Received: by 10.64.76.81 with SMTP id i17csp33885iew;
+        Wed, 18 Apr 2012 08:21:53 -0700 (PDT)
+Received: by 10.52.99.106 with SMTP id ep10mr1075016vdb.130.1334762512551;
+        Wed, 18 Apr 2012 08:21:52 -0700 (PDT)
+Return-Path: <tapesmith@gmail.com>
+Received: from mail-vx0-f172.google.com (mail-vx0-f172.google.com [209.85.220.172])
+        by mx.google.com with ESMTPS id cq6si4505293vcb.46.2012.04.18.08.21.52
+        (version=TLSv1/SSLv3 cipher=OTHER);
+        Wed, 18 Apr 2012 08:21:52 -0700 (PDT)
+Received-SPF: pass (google.com: domain of tapesmith@gmail.com designates 209.85.220.172 as permitted sender) client-ip=209.85.220.172;
+Authentication-Results: mx.google.com; spf=pass (google.com: domain of tapesmith@gmail.com designates 209.85.220.172 as permitted sender) smtp.mail=tapesmith@gmail.com; dkim=pass header.i=@gmail.com
+Received: by vcbfo1 with SMTP id fo1so1825355vcb.17
+        for <bible@ninjatricks.net>; Wed, 18 Apr 2012 08:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20120113;
+        h=mime-version:from:date:message-id:subject:to:content-type;
+        bh=lPpWgvSsG13d8nFqussBlMZhtUzu9LylxukM5KVoHYo=;
+        b=HbzxgF3yoiBN9HWia5/oL6rx76b+2DBU2Fn4axgJG994o0C4yfiIK6KZXL1vrp4KF6
+         hLOOKsTHhhB9SyxWvuN5Y/WzC/txtxlIjG5hRoHg+DkCMbwdEuqhh1HlLJWpTDhN+C30
+         1VUhOw4aPoRVlCnYboMbn2Nzbc4RAukTd2fKH2ABb4KrywWM3ZXDnvp/YqVAWBUTgWYr
+         cLqLw0KH+5w0Bgwoong7Xz+EixstHlvPYER42fUdGV/rbDstVvqitlu7odYW8HBdPnMO
+         y6lO224NQWVP/n5lnAcuMaHlTWxZDFtQ+hIGxJ+9axnR75JkQj/ubmmVfSN3mr/RETG7
+         ftzw==
+Received: by 10.221.1.11 with SMTP id no11mr1370685vcb.46.1334762511697; Wed,
+ 18 Apr 2012 08:21:51 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.220.3.19 with HTTP; Wed, 18 Apr 2012 08:21:31 -0700 (PDT)
+From: Spencer Williams <tapesmith@gmail.com>
+Date: Wed, 18 Apr 2012 11:21:31 -0400
+Message-ID: <CAAKRrECOVAw2xbTTyMiqYV-38yp8_1UUnivanzd7QoMrZ-sNJQ@mail.gmail.com>
+Subject: test
+To: BibleBot <bible@ninjatricks.net>
+Content-Type: multipart/alternative; boundary=bcaec54eea4c5e86c804bdf59def
+
+--bcaec54eea4c5e86c804bdf59def
+Content-Type: text/plain; charset=ISO-8859-1
+
+test test Rom. 12:2 test
+
+--bcaec54eea4c5e86c804bdf59def
+Content-Type: text/html; charset=ISO-8859-1
+
+test test Rom. 12:2 test
+
+--bcaec54eea4c5e86c804bdf59def--
+
+
+
