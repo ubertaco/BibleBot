@@ -15,31 +15,67 @@ Having fetched the text of each verse, it replies to the original email with the
 Configuration
 -------------
 
-BibleBot is configured using JSON; the default configuration file is named "BibleBot.conf" and lives in the same directory as BibleBot's source code; other configuration files may be specified using the "-c" or "--config=" options on the command-line. 
+BibleBot is configured using JSON; the default configuration file is named "BibleBot.conf" and lives in the same directory as BibleBot's source code; other configuration files may be specified using the `-c` or `--config=` options on the command-line. 
 
-The keys that BibleBot needs from this JSON config file are:
+Configuration files specify a list of Channels, each of which has a Listener (to receive passage lookup requests) and a Sender (to send responses for each passage looked up)
 
-* **check_interval**: the time (in seconds) BibleBot waits before checking for new emails.
+The syntax for configuration files is:
 
-* **imap_hostname**: The address of the IMAP (incoming) email server BibleBot to which should connect.
+        {
+            "channel_name": {
 
-* **imap_port**: The port BibleBot should use in connecting to the IMAP email server (most of the time, this should be 993).
+                "listener": {
+                    "type": "listener_type",
+                    < listener_configuration >
+                },
 
-* **imap_label**: The address of the IMAP label BibleBot should read from (this should probably be "inbox").
+                "sender": {
+                    "type": "sender_type",
+                    < sender_configuration >
+                }
+            }
+        }
 
-* **imap_username**: The IMAP username for the email address BibleBot should check.
+The options for listener\_configuration and sender\_configuration vary based on the type of listener and sender.
 
-* **imap_password**: The IMAP password for the email address BibleBot should check.
+## Available Listener Types ##
 
-* **smtp_hostname**: The address of the SMTP (outgoing) email server BibleBot to which should connect.
+#### IMAP ####
 
-* **smtp_port**: The port BibleBot should use in connecting to the SMTP email server (most of the time, this should be either 465, 585, or 587).
+IMAP listeners watch an email inbox using the IMAP protocol.
 
-* **smtp_username**: The SMTP username for the email address BibleBot should use for sending mail.
+The required configuration options for IMAP listeners are:
 
-* **smtp_password**: The SMTP password for the email address BibleBot should use for sending mail.
+* **server**: The address of the IMAP email server BibleBot to which should connect.
 
-* **smtp_use_ssl**: Whether BibleBot should use SSL (sometimes called TLS) for its connection to the SMTP email server (for security reasons, this should usually be set to "true").
+* **port**: The port BibleBot should use in connecting to the IMAP email server (most of the time, this should be 993).
+
+* **label**: The address of the email label (like a folder or sub-category of your email) BibleBot should watch for incoming requests (this should usually be "inbox").
+
+* **username**: The username for the email address BibleBot should check.
+
+* **password**: The password for the email address BibleBot should check.
+
+* **use_ssl**: Whether BibleBot should use SSL (sometimes called TLS) for its connection to the email server (for security reasons, this should usually be set to "true").
+
+
+## Available Sender Types ##
+
+#### SMTP ####
+
+SMTP senders send emails by connecting to an email server using the SMTP protocol.
+
+The required configuration options for IMAP listeners are:
+
+* **server**: The address of the SMTP (outgoing) email server BibleBot to which should connect.
+
+* **port**: The port BibleBot should use in connecting to the SMTP email server (most of the time, this should be either 465, 585, or 587).
+
+* **username**: The username for the email address BibleBot should use to send mail.
+
+* **password**: The password for the email address BibleBot should use to send mail.
+
+* **use_ssl**: Whether BibleBot should use SSL (sometimes called TLS) for its connection to the SMTP email server (for security reasons, this should usually be set to "true").
 
 
 
