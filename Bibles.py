@@ -1,6 +1,6 @@
 import sys, logging, inspect, re
 logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
-format="[%(asctime)s %(module)s] %(message)s")
+    format="[%(asctime)s %(module)s - %(name)s] {%(levelname)s} %(message)s")
 import requests
 
 book_patterns = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
