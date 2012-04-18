@@ -1,14 +1,15 @@
 import unittest
-import re
+import os, re
 
-# TODO: unit tests for SMTPSender, IMAPListener, and all TransactionObjects  
+def readConfigResourceFile(filename):
+    with open(os.path.join("test", "resources", filename)) as infile:
+        return infile.read()
 
 class BibleTest(unittest.TestCase):
     """Tests correct functionality of the Bibles module."""
 
     def testParseReferences(self):
-        """ Test reference parsing (should return a tuple of bible verse
-        references parsed from an input string"""
+        """Test bible reference parsing"""
         from Bibles import parse_references
         print("Testing reference parsing")
         expected_result = ["Rom. 12:2", """Romans
@@ -18,8 +19,8 @@ class BibleTest(unittest.TestCase):
         self.assertEquals(parse_references(input_str), expected_result)
 
     def testLookupPassage(self):
+        """Test bible passage lookup in all translations"""
         import Bibles
-        """Test bible lookup """
 
         expected_result = {}
         expected_result["ESV"] = re.sub("\s+", " ", u"""Romans 12:2
@@ -41,14 +42,51 @@ class BibleTest(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-class SenderTest(unittest.TestCase):
+class SMTPSenderTest(unittest.TestCase):
     """Tests correct functionality of senders"""
-    def testSMTPSend(self):
-        import TransactionObjects, smtpd
-        # debugServer = smtpd.DebuggingServer("127.0.0.1")
+    def testSMTPEncode(self):
+        """Test encoding of Responses to text/plain MIME email for SMTP."""
+        from Senders import SMTPSender
+        from TransactionObjects import Response
+        import TransactionObjects, subprocess, sys
+        msg = Response(passage="Rom. 12:2", text="test test test",
+        recipient="foo@foo.com")
+        expected_result = """Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+From: BibleBot <biblebot@ninjatricks.net>
+To: foo@foo.com
+Subject: Rom. 12:2
 
+test test test"""
+        self.assertEquals(SMTPSender.encode(msg), expected_result)
 
 class ListenerTest(unittest.TestCase):
    """Tests correct functionality of Listeners."""
 
-   def test
+   def testEmailToQuery(self):
+       """Test conversion of RFC822 email strings to Queries"""
+       from Listeners import IMAPListener
+       from TransactionObjects import Query
+       testmail = readConfigResourceFile("test_rec_mail")
+       expected_result = Query(['Rom. 12:2'], 'Spencer Williams <tapesmith@gmail.com>')
+       result = IMAPListener.emailToQuery(testmail)
+       self.assertEquals(result.passages, expected_result.passages)
+       self.assertEquals(result.sender, expected_result.sender)
+
+class ConfigTest(unittest.TestCase):
+    """Tests correct config parsing."""
+
+    def testChannelsFromConfig(self):
+        """Test creation of channels from a config file"""
+        import Conf 
+        from Channels import Channel
+        from Listeners import Listener
+        from Senders import Sender
+        testconfig = readConfigResourceFile("test_configuration.conf")
+        channels = Conf.read_channels_from_config(testconfig)
+        for c in channels:
+            self.assertIsInstance(c, Channel)
+            self.assertIsInstance(c.listener, Listener)
+            self.assertIsInstance(c.sender, Sender)
+            self.assertEquals(c.name, "test_channel")

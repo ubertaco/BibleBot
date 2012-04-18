@@ -2,10 +2,10 @@ To do
 -----
 * New configuration file format
 
-    * needs to support specification of multiple channels, each with a sender and a listener, with options for each.
+    * Allow specification of polling interval for each channel
 
-        * Best option might be to stick with JSON; each root-level entry is a channel containing a "name" entry, a "listener" entry, and a "sender" entry
+        * Conf needs to be able to pull out this value
 
-* Finish implementing IMAPListener and SMTPSender
+        * Main needs to be smart enough to check if any channels are ready for polling
 
-* Migrate Main.py to new system
+* Unit Testing for Conf, ListenerFactory, SenderFactory
