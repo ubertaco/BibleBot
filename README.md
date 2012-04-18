@@ -4,13 +4,11 @@ BibleBot
 Overview
 --------
 
-BibleBot watches a given email account (using IMAP) for incoming messages. When it receives a new email, it reads the email and pulls out any Scripture references (such as "Romans 12:2").
+BibleBot watches varying sources for incoming messages. When it receives a new message, it reads the message and pulls out any Scripture references (such as "Romans 12:2") -- these become BibleBot's "requests". 
 
 BibleBot then looks up each of these references in a specified translation (currently only ESV is supported and is used by default -- the ability to specify another translation is planned for a future version).
 
-Having fetched the text of each verse, it replies to the original email with the text of each verse.
-
-
+Having fetched the text of each verse, it responds to the original message's sender with the text of each verse.
 
 Configuration
 -------------
