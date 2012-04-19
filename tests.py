@@ -11,33 +11,33 @@ class BibleTest(unittest.TestCase):
     def testParseReferences(self):
         """Test bible reference parsing"""
         from Bibles import parse_references
-        print("Testing reference parsing")
         expected_result = ["Rom. 12:2", """Romans
         12:2""", "Romans 12:2"]
         input_str = """test bar baz foo 123Rom. 12:2 bonkRomans 12:2 Romans
         12:2"""
         self.assertEquals(parse_references(input_str), expected_result)
 
+    def testParseTranslations(self):
+        """Test translation parsing"""
+        from Bibles import parse_translations
+        expected_result = ["ESV", "KJV"]
+        input_str = """blar aohfwe ESV a;oihwef 
+        KJV"""
+        self.assertEquals(parse_translations(input_str, expected_result))
+
     def testLookupPassage(self):
         """Test bible passage lookup in all translations"""
         import Bibles
 
-        expected_result = {}
-        expected_result["ESV"] = re.sub("\s+", " ", u"""Romans 12:2
-      [2]Do not be conformed to this world, but be transformed by the
-    renewal of your mind, that by testing you may discern what is the will of
-    God, what is good and acceptable and perfect. (ESV)""")
+        import json
+        expected_result = json.loads(readConfigResourceFile("test_passages.json"))
 
         for translation in Bibles.translations.iterkeys():
             print("Testing %s lookup." % translation)
-
             result = Bibles.translations[translation].lookup("Romans 12:2")
             result = re.sub("\s+", " ", result)
-            self.assertEquals(result, expected_result[translation])
-
-            result = Bibles.translations[translation].lookup("Rom. 12:2")
-            result = re.sub("\s+", " ", result)
-            self.assertEquals(result, expected_result[translation])
+            self.assertEquals(result, re.sub("\s+", " ",
+                expected_result[translation]))
 
 if __name__ == "__main__":
     unittest.main()

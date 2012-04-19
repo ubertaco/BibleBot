@@ -1,4 +1,4 @@
-import sys, logging, inspect, re
+import sys, logging, inspect, re, json
 logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
     format="[%(asctime)s %(module)s - %(name)s] {%(levelname)s} %(message)s")
 import requests
@@ -28,15 +28,21 @@ book_patterns = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
 "Rom.", "1 Thess.", "1 Thes.", "2 Thess.", "2 Thes.", "1 Tim.", "1 Tm.", 
 "2 Tim.", "2 Tm.", "Ti."]
 
-
 def parse_references(in_str):
     reference_list = []
     for book_pattern in book_patterns:
-        for ref in re.findall(book_pattern+"\s+\d{1,3}:\d{1,3}", in_str):
+        for ref in re.findall(book_pattern+"\s+\d{1,3}(?::\d{1,3})?", in_str,
+                re.IGNORECASE):
             reference_list.append(ref)
 
     reference_list = list(set(reference_list)) # remove any duplicates
     return reference_list
+
+def parse_translations(in_str):
+    translation_list = []
+    for translation in get_translations():
+        for trans in re.findall("\s*%s\s*" % translation, in_str):
+            translation_list.append(re.sub("\s*", "", trans))
 
 class Bible(object):
     def __init__(self, name, url):
@@ -75,6 +81,33 @@ class ESVBible(Bible):
         page = requests.get(self.url % urlopts)
         page_html = page.text.strip()
         return page_html
+
+class KJVBible(Bible):
+    def __init__(self):
+        super(KJVBible, self).__init__("KJV",
+            "http://beta.biblegateway.com/api/1/bible/%(reference)s/KJV")
+
+    def lookup(self, reference):
+        super(KJVBible, self).lookup(reference)
+        osis_reference = reference.replace(":", ".")
+        osis_reference = re.sub("\s+", "", osis_reference)
+        urlopts = {
+            "reference": osis_reference
+        }
+
+        logging.debug("Requesting " + (self.url % urlopts))
+
+        page = requests.get(self.url % urlopts)
+        page_html = page.text.strip()
+        response_dict = json.loads(page_html)
+        if len(response_dict["data"]) > 0:
+            text =  response_dict["data"][0]["text"]
+            passage = "%s\n    %s (KJV)" % (reference, text)
+        else:
+            passage = """Sorry, I couldn't find %s in my Bible -- please check the
+            reference and try again.""" % reference 
+        return passage
+
 
 def get_translations():
     dict_translations = {}
