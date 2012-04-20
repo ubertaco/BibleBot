@@ -4,6 +4,7 @@ class Query:
         self.sender = sender
         self.channel = None
 
+
 class Response:
     def __init__(self, passage, text, recipient):
         self.passage = passage

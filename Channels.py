@@ -1,7 +1,6 @@
-from Listeners import *
-from Senders import *
 logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
     format="[%(asctime)s %(module)s - %(name)s] {%(levelname)s} %(message)s")
+
 
 class Channel:
     def __init__(self, name, listener, sender):

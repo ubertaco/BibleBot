@@ -1,8 +1,11 @@
-import logging, smtplib
+import logging
+import smtplib
 from TransactionObjects import Response
 from Mail import NoMailConnectionError
+
 logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
     format="[%(asctime)s %(module)s - %(name)s] {%(levelname)s} %(message)s")
+
 
 class Sender:
     def __init__(self):
@@ -12,14 +15,17 @@ class Sender:
         raise NotImplementedError
         pass
 
+
 class SenderFactory:
+
     @staticmethod
     def create_sender_from_config(conf):
         """Creates a sender from the specified configuration dictionary"""
         if conf["type"].lower() == "smtp":
             logging.info("Creating new SMTP Sender")
             del conf["type"]
-            return SMTPSender(**conf) 
+            return SMTPSender(**conf)
+
 
 class SMTPSender(Sender):
     def __init__(self, username, password, server='smtp.gmail.com',
@@ -33,8 +39,8 @@ class SMTPSender(Sender):
 
     def connect(self):
         # Initiate connection
-        logging.info("Connecting to SMTP server %s on port %s as %s" % (self.server,
-            self.port, self.username))
+        logging.info("Connecting to SMTP server %s on port %s as %s" %
+                (self.server, self.port, self.username))
         connection = smtplib.SMTP(self.server, self.port)
         connection.ehlo()
         if self.use_ssl:
@@ -53,7 +59,7 @@ class SMTPSender(Sender):
             raise NoMailConnectionError('No connection to mail sender')
         else:
             return True
-    
+
     def send(self, response):
         """Sends a response object using the current SMTP connection"""
         logging.info("Sending response:\r\n %s" % str(response))

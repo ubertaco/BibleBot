@@ -1,9 +1,12 @@
 import unittest
-import os, re
+import os
+import re
+
 
 def readConfigResourceFile(filename):
     with open(os.path.join("test", "resources", filename)) as infile:
         return infile.read()
+
 
 class BibleTest(unittest.TestCase):
     """Tests correct functionality of the Bibles module."""
@@ -21,7 +24,7 @@ class BibleTest(unittest.TestCase):
         """Test translation parsing"""
         from Bibles import parse_translations
         expected_result = ["ESV", "KJV"]
-        input_str = """blar aohfwe ESV a;oihwef 
+        input_str = """blar aohfwe ESV a;oihwef
         KJV"""
         self.assertEquals(parse_translations(input_str, expected_result))
 
@@ -30,7 +33,9 @@ class BibleTest(unittest.TestCase):
         import Bibles
 
         import json
-        expected_result = json.loads(readConfigResourceFile("test_passages.json"))
+        expected_result = json.loads(
+                readConfigResourceFile("test_passages.json")
+                )
 
         for translation in Bibles.translations.iterkeys():
             print("Testing %s lookup." % translation)
@@ -39,8 +44,6 @@ class BibleTest(unittest.TestCase):
             self.assertEquals(result, re.sub("\s+", " ",
                 expected_result[translation]))
 
-if __name__ == "__main__":
-    unittest.main()
 
 class SMTPSenderTest(unittest.TestCase):
     """Tests correct functionality of senders"""
@@ -48,7 +51,6 @@ class SMTPSenderTest(unittest.TestCase):
         """Test encoding of Responses to text/plain MIME email for SMTP."""
         from Senders import SMTPSender
         from TransactionObjects import Response
-        import TransactionObjects, subprocess, sys
         msg = Response(passage="Rom. 12:2", text="test test test",
         recipient="foo@foo.com")
         expected_result = """Content-Type: text/plain; charset="us-ascii"
@@ -61,25 +63,28 @@ Subject: Rom. 12:2
 test test test"""
         self.assertEquals(SMTPSender.encode(msg), expected_result)
 
-class ListenerTest(unittest.TestCase):
-   """Tests correct functionality of Listeners."""
 
-   def testEmailToQuery(self):
-       """Test conversion of RFC822 email strings to Queries"""
-       from Listeners import IMAPListener
-       from TransactionObjects import Query
-       testmail = readConfigResourceFile("test_rec_mail")
-       expected_result = Query(['Rom. 12:2'], 'Spencer Williams <tapesmith@gmail.com>')
-       result = IMAPListener.emailToQuery(testmail)
-       self.assertEquals(result.passages, expected_result.passages)
-       self.assertEquals(result.sender, expected_result.sender)
+class ListenerTest(unittest.TestCase):
+    """Tests correct functionality of Listeners."""
+
+    def testEmailToQuery(self):
+        """Test conversion of RFC822 email strings to Queries"""
+        from Listeners import IMAPListener
+        from TransactionObjects import Query
+        testmail = readConfigResourceFile("test_rec_mail")
+        expected_result = Query(
+                ['Rom. 12:2'], 'Spencer Williams <tapesmith@gmail.com>')
+        result = IMAPListener.emailToQuery(testmail)
+        self.assertEquals(result.passages, expected_result.passages)
+        self.assertEquals(result.sender, expected_result.sender)
+
 
 class ConfigTest(unittest.TestCase):
     """Tests correct config parsing."""
 
     def testChannelsFromConfig(self):
         """Test creation of channels from a config file"""
-        import Conf 
+        import Conf
         from Channels import Channel
         from Listeners import Listener
         from Senders import Sender
@@ -90,3 +95,7 @@ class ConfigTest(unittest.TestCase):
             self.assertIsInstance(c.listener, Listener)
             self.assertIsInstance(c.sender, Sender)
             self.assertEquals(c.name, "test_channel")
+
+
+if __name__ == "__main__":
+    unittest.main()

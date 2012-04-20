@@ -1,9 +1,13 @@
-import re, socket
-import logging, imaplib # import necessary libs
-logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
-    format="[%(asctime)s %(module)s - %(name)s] {%(levelname)s} %(message)s")
+import re
+import socket
+import logging
+import imaplib
 from Bibles import parse_references
 from TransactionObjects import Query, Response
+
+logging.basicConfig(level=logging.DEBUG, filename='biblebot.log',
+    format="[%(asctime)s %(module)s - %(name)s] {%(levelname)s} %(message)s")
+
 
 class Listener:
     def __init__(self):
@@ -25,7 +29,8 @@ class ListenerFactory:
 
         if conf["type"].lower() == "imap":
             del conf["type"]
-            return IMAPListener(**conf) 
+            return IMAPListener(**conf)
+
 
 class IMAPListener(Listener):
     def __init__(self, username, password, server='imap.gmail.com',
@@ -38,7 +43,6 @@ class IMAPListener(Listener):
         self.label = label
         self.use_ssl = use_ssl
 
-
     def connect(self):
         logging.info("Connecting to IMAP server %s on port %s" % (self.server,
             self.port))
@@ -49,7 +53,7 @@ class IMAPListener(Listener):
         logging.info("Logging into %s as %s" % (self.server, self.username))
         self.connection.login(self.username, self.password)
         logging.info("Successful login to IMAP!")
-        self.connection.select(self.label) # select label (inbox by default)
+        self.connection.select(self.label)  # select label (inbox by default)
 
     def disconnect(self):
         logging.info("Logging %s out of %s" % (self.username, self.server))
@@ -58,15 +62,12 @@ class IMAPListener(Listener):
         self.connection.logout()
         self.connection = None
 
-
-
     def poll(self):
-        """Polls this IMAPListener's inbox for a count of new Queries. 
-        Returns an integer."""
+        """Polls this IMAPListener's inbox for a count of new Queries."""
         return self.get_unread_count()
 
     def get_new_queries(self):
-        """Fetches a list containing new Queries from this IMAPListener's inbox."""
+        """Fetches a list containing new Queries from this IMAPListener."""
         mails = self.get_unread_mails()
         queries = []
         for mail in mails:
@@ -95,7 +96,7 @@ class IMAPListener(Listener):
             return int(unreadCount)
 
     def get_unread_mails(self):
-        """Returns an iterable containing all unread messages as RFC822 
+        """Returns an iterable containing all unread messages as RFC822
         strings."""
         logging.info("Fetching new mail.")
         self.connect()
@@ -138,8 +139,8 @@ class IMAPListener(Listener):
         if maintype == 'multipart':
             for part in msg.get_payload():
                 if part.get_content_maintype() == 'text':
-                   body = part.get_payload()
-            
+                    body = part.get_payload()
+
         elif maintype == 'text':
             body = msg.get_payload()
 
@@ -147,4 +148,3 @@ class IMAPListener(Listener):
         passages = parse_references(body)
 
         return Query(passages=passages, sender=sender)
-

@@ -36,7 +36,7 @@ The syntax for configuration files is:
 
 The options for listener\_configuration and sender\_configuration vary based on the type of listener and sender.
 
-## Available Listener Types ##
+### Available Listener Types ###
 
 #### IMAP ####
 
@@ -56,8 +56,7 @@ The required configuration options for IMAP listeners are:
 
 * **use_ssl**: Whether BibleBot should use SSL (sometimes called TLS) for its connection to the email server (for security reasons, this should usually be set to "true").
 
-
-## Available Sender Types ##
+### Available Sender Types ###
 
 #### SMTP ####
 
@@ -74,8 +73,6 @@ The required configuration options for IMAP listeners are:
 * **password**: The password for the email address BibleBot should use to send mail.
 
 * **use_ssl**: Whether BibleBot should use SSL (sometimes called TLS) for its connection to the SMTP email server (for security reasons, this should usually be set to "true").
-
-
 
 
 Requirements
